@@ -8,16 +8,12 @@ export default {
   },
   theme: BlogTheme,
   themeConfig: {
-    title: `Sairin`,
+    title: `Charles`,
     links: [
       {
         title: "GitHub",
-        url: "https://github.com/djyde/sairin",
-      },
-      {
-        title: "Twitter",
-        url: "https://twitter.com/randyloop",
-      },
+        url: "https://github.com/y1feng200156",
+      }
     ],
   },
 } as SairinConfig;
