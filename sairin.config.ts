@@ -9,6 +9,7 @@ export default {
   theme: BlogTheme,
   themeConfig: {
     title: `Charles`,
+    author: 'Charles',
     links: [
       {
         title: "GitHub",
