@@ -1,13 +1,13 @@
 {
-  "name": "@sairinjs/example",
+  "name": "my-blog", 
   "version": "0.1.0",
   "scripts": {
     "dev": "next dev",
     "build": "next build"
   },
   "dependencies": {
-    "@sairinjs/core": "^1",
-    "@sairinjs/sairin-theme-minimal": "^1",
+    "@y1feng200156/sairin-core": "^1.1.3",
+    "@y1feng200156/sairin-theme-minimal": "^1.1.3",
     "next": "^12.1.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2"
