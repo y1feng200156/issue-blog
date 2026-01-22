@@ -1,0 +1,52 @@
+name: Sync to Code Repo
+
+# 监听当前仓库 (issue-blog) 的 Issue 变动
+on:
+  issues:
+    types: [opened, edited, deleted, labeled, unlabeled]
+  workflow_dispatch: # 允许手动点按钮触发
+
+jobs:
+  sync-remote:
+    runs-on: ubuntu-latest
+    steps:
+      # 1. 检出【Next.js 代码仓库】 (不是当前仓库！)
+      - name: Checkout Code Repository
+        uses: actions/checkout@v4
+        with:
+          # ⚠️ 必须修改：填你 Next.js 项目的 "用户名/仓库名"
+          repository: ${{ env.TARGET_REPO }}
+          # ⚠️ 必须使用 PAT，否则没权限拉取和推送
+          token: ${{ secrets.ACTION_PAT }} 
+          
+      # 2. 配置环境 (此时工作目录已经是你的 Next.js 项目了)
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+
+      # 3. 安装依赖
+      - name: Install dependencies
+        run: npm ci
+
+      # 4. 运行同步脚本
+      # 脚本会更新当前目录下的 posts.db
+      - name: Run Sync Script
+        run: npx tsx scripts/sync.ts
+        env:
+          # 这里依然用 ACTION_PAT，因为它权限大，肯定能读到 Issue
+          GITHUB_TOKEN: ${{ secrets.ACTION_PAT }}
+          # 告诉脚本：去 "issue-blog" 这个仓库读 Issue
+          GITHUB_OWNER: y1feng200156
+          GITHUB_REPO: issue-blog 
+
+      # 5. 提交并推送到【Next.js 代码仓库】
+      - name: Commit and Push DB
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          # 提交信息
+          commit_message: "chore(content): sync issue update from issue-blog"
+          # 只提交数据库文件
+          file_pattern: posts.db
+          # 即使没有文件变动也不报错
+          skip_dirty_check: false
